@@ -1,4 +1,4 @@
-name: Deploy to GitHub Pages
+name: Deploy to GitHub Pages (gh-pages)
 
 on:
   push:
@@ -6,26 +6,19 @@ on:
       - main
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write
 
 jobs:
-  build-and-deploy:
+  deploy:
     runs-on: ubuntu-latest
-    name: Upload and deploy site to GitHub Pages
+    name: Deploy repository root to `gh-pages` branch
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Upload repository contents for Pages
-        uses: actions/upload-pages-artifact@v1
+      - name: Deploy to `gh-pages` branch
+        uses: peaceiris/actions-gh-pages@v3
         with:
-          path: './'
-
-  deploy:
-    needs: build-and-deploy
-    runs-on: ubuntu-latest
-    steps:
-      - name: Deploy to GitHub Pages
-        uses: actions/deploy-pages@v1
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./
+          publish_branch: gh-pages
